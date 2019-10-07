@@ -1291,7 +1291,7 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
     struct SoundIoDevice *device = outstream->device;
     struct SoundIoDevicePrivate *dev = (struct SoundIoDevicePrivate *)device;
     struct SoundIoDeviceWasapi *dw = &dev->backend_data.wasapi;
-    IAudioClient3* audio_client3;
+    IAudioClient3* audio_client3 = NULL;
     HRESULT hr;
 
     if (!osw->is_raw && SUCCEEDED(hr = IMMDevice_Activate(dw->mm_device, IID_IAUDIOCLIENT3,
@@ -1319,7 +1319,7 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
     DWORD flags;
     REFERENCE_TIME buffer_duration;
     REFERENCE_TIME periodicity;
-    UINT32 periodicity_in_frames;
+    UINT32 periodicity_in_frames = 0;
     WAVEFORMATEXTENSIBLE wave_format = {0};
     wave_format.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
     wave_format.Format.cbSize = sizeof(WAVEFORMATEXTENSIBLE) - sizeof(WAVEFORMATEX);
