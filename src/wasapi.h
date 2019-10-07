@@ -76,7 +76,8 @@ struct SoundIoOutStreamWasapi {
     bool open_complete;
     int open_err;
     bool started;
-    UINT32 min_padding_frames;
+    UINT32 padding_frames_min;
+    UINT32 padding_frames;
     float volume;
     struct SoundIoAtomicBool active_update;
     float active_latency;

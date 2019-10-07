@@ -1387,6 +1387,8 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
             return SoundIoErrorOpeningDevice;
         }
 
+        osw->padding_frames_min = periodicity_in_frames;
+
         IUnknown_Release(audio_client3);
         audio_client3 = NULL;
     }
@@ -1443,19 +1445,21 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
                 return SoundIoErrorOpeningDevice;
             }
         }
-    }
-    REFERENCE_TIME max_latency_ref_time;
-    if (FAILED(hr = IAudioClient_GetStreamLatency(osw->audio_client, &max_latency_ref_time))) {
-        return SoundIoErrorOpeningDevice;
-    }
-    double max_latency_sec = from_reference_time(max_latency_ref_time);
-    osw->min_padding_frames = (max_latency_sec * outstream->sample_rate) + 0.5;
 
+        REFERENCE_TIME max_latency_ref_time;
+        if (FAILED(hr = IAudioClient_GetStreamLatency(osw->audio_client, &max_latency_ref_time))) {
+            return SoundIoErrorOpeningDevice;
+        }
+        double max_latency_sec = from_reference_time(max_latency_ref_time);
+        osw->padding_frames_min = (max_latency_sec * outstream->sample_rate) + 0.5;
+    }
 
     if (FAILED(hr = IAudioClient_GetBufferSize(osw->audio_client, &osw->buffer_frame_count))) {
         return SoundIoErrorOpeningDevice;
     }
     outstream->software_latency = osw->buffer_frame_count / (double)outstream->sample_rate;
+    osw->padding_frames = soundio_int_clamp(osw->padding_frames_min, osw->padding_frames, osw->buffer_frame_count);
+    outstream->software_latency = osw->padding_frames / (double)outstream->sample_rate;
 
     if (osw->is_raw) {
         if (FAILED(hr = IAudioClient_SetEventHandle(osw->audio_client, osw->h_event))) {
@@ -1517,7 +1521,7 @@ static void outstream_shared_run(struct SoundIoOutStreamPrivate *os) {
         outstream->error_callback(outstream, SoundIoErrorStreaming);
         return;
     }
-    int frame_count_min = soundio_int_max(0, (int)osw->min_padding_frames - (int)frames_used);
+    int frame_count_min = soundio_int_max(0, (int)osw->padding_frames - (int)frames_used);
     outstream->write_callback(outstream, frame_count_min, osw->writable_frame_count);
 
     if (FAILED(hr = IAudioClient_Start(osw->audio_client))) {
@@ -1564,6 +1568,7 @@ static void outstream_shared_run(struct SoundIoOutStreamPrivate *os) {
             SOUNDIO_ATOMIC_FLAG_CLEAR(osw->pause_resume_flag);
             reset_buffer = true;
         }
+
         if (!SOUNDIO_ATOMIC_FLAG_TEST_AND_SET(osw->pause_resume_flag)) {
             bool pause = SOUNDIO_ATOMIC_LOAD(osw->desired_pause_state);
             if (pause && !osw->is_paused) {
@@ -1589,7 +1594,7 @@ static void outstream_shared_run(struct SoundIoOutStreamPrivate *os) {
         if (osw->writable_frame_count > 0) {
             if (frames_used == 0 && !reset_buffer)
                 outstream->underflow_callback(outstream);
-            int frame_count_min = soundio_int_max(0, (int)osw->min_padding_frames - (int)frames_used);
+            int frame_count_min = soundio_int_max(0, (int)osw->padding_frames - (int)frames_used);
             outstream->write_callback(outstream, frame_count_min, osw->writable_frame_count);
         }
     }
