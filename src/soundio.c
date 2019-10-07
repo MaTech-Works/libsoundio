@@ -568,6 +568,13 @@ int soundio_outstream_set_volume(struct SoundIoOutStream *outstream, double volu
     return si->outstream_set_volume(si, os, volume);
 }
 
+int soundio_outstream_set_active_update(struct SoundIoOutStream *outstream, bool active_update, double padding) {
+    struct SoundIo *soundio = outstream->device->soundio;
+    struct SoundIoPrivate *si = (struct SoundIoPrivate *)soundio;
+    struct SoundIoOutStreamPrivate *os = (struct SoundIoOutStreamPrivate *)outstream;
+    return si->outstream_set_active_update(si, os, active_update, padding);
+}
+
 static void default_instream_error_callback(struct SoundIoInStream *is, int err) {
     soundio_panic("libsoundio: %s", soundio_strerror(err));
 }

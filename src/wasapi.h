@@ -78,6 +78,8 @@ struct SoundIoOutStreamWasapi {
     bool started;
     UINT32 min_padding_frames;
     float volume;
+    struct SoundIoAtomicBool active_update;
+    float active_latency;
     struct SoundIoChannelArea areas[SOUNDIO_MAX_CHANNELS];
 };
 
@@ -102,7 +104,7 @@ struct SoundIoInStreamWasapi {
     bool started;
     char *read_buf;
     int read_buf_frames_left;
-	int opened_buf_frames;
+    int opened_buf_frames;
     struct SoundIoChannelArea areas[SOUNDIO_MAX_CHANNELS];
 };
 

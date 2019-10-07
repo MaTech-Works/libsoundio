@@ -153,6 +153,7 @@ struct SoundIoPrivate {
     int (*outstream_pause)(struct SoundIoPrivate *, struct SoundIoOutStreamPrivate *, bool pause);
     int (*outstream_get_latency)(struct SoundIoPrivate *, struct SoundIoOutStreamPrivate *, double *out_latency);
     int (*outstream_set_volume)(struct SoundIoPrivate *, struct SoundIoOutStreamPrivate *, float volume);
+    int (*outstream_set_active_update)(struct SoundIoPrivate *, struct SoundIoOutStreamPrivate *, bool active_update, double padding);
 
     int (*instream_open)(struct SoundIoPrivate *, struct SoundIoInStreamPrivate *);
     void (*instream_destroy)(struct SoundIoPrivate *, struct SoundIoInStreamPrivate *);
