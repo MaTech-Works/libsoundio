@@ -1315,6 +1315,8 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
     outstream->software_latency = soundio_double_clamp(device->software_latency_min,
         outstream->software_latency, device->software_latency_max);
 
+    osw->padding_frames_min = outstream->software_latency / 2;
+
     AUDCLNT_SHAREMODE share_mode;
     DWORD flags;
     REFERENCE_TIME buffer_duration;
@@ -1445,21 +1447,22 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
                 return SoundIoErrorOpeningDevice;
             }
         }
-
-        REFERENCE_TIME max_latency_ref_time;
-        if (FAILED(hr = IAudioClient_GetStreamLatency(osw->audio_client, &max_latency_ref_time))) {
-            return SoundIoErrorOpeningDevice;
-        }
-        double max_latency_sec = from_reference_time(max_latency_ref_time);
-        osw->padding_frames_min = (max_latency_sec * outstream->sample_rate) + 0.5;
     }
 
     if (FAILED(hr = IAudioClient_GetBufferSize(osw->audio_client, &osw->buffer_frame_count))) {
         return SoundIoErrorOpeningDevice;
     }
-    outstream->software_latency = osw->buffer_frame_count / (double)outstream->sample_rate;
+    
+    REFERENCE_TIME max_latency_ref_time;
+    if (FAILED(hr = IAudioClient_GetStreamLatency(osw->audio_client, &max_latency_ref_time))) {
+        return SoundIoErrorOpeningDevice;
+    }
+    double max_latency_sec = from_reference_time(max_latency_ref_time);
+
+    osw->padding_frames_min = soundio_int_max(osw->padding_frames_min, (max_latency_sec * outstream->sample_rate) + 0.5);
     osw->padding_frames = soundio_int_clamp(osw->padding_frames_min, osw->padding_frames, osw->buffer_frame_count);
-    outstream->software_latency = osw->padding_frames / (double)outstream->sample_rate;
+
+    outstream->software_latency = osw->buffer_frame_count / (double)outstream->sample_rate;
 
     if (osw->is_raw) {
         if (FAILED(hr = IAudioClient_SetEventHandle(osw->audio_client, osw->h_event))) {
