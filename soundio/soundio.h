@@ -536,6 +536,14 @@ struct SoundIoOutStream {
     /// For JACK, this value is always equal to
     /// SoundIoDevice::software_latency_current of the device.
     double software_latency;
+    /// Minimum amount of software latency, calculated from the periodicity of
+    /// the audio buffer being read or the minimum padding that is required in
+    /// writing the buffer without making audio glitches.
+    ///
+    /// Notice that in application, the minimum amount of audio frames to be
+    /// written should always follow the parameter frame_count_min given to
+    /// the write callback.
+    double software_latency_min;
     /// Core Audio and WASAPI only: current output Audio Unit volume. Float, 0.0-1.0.
     float volume;
     /// Defaults to NULL. Put whatever you want here.

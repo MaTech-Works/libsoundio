@@ -1463,6 +1463,7 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
     osw->padding_frames = soundio_int_clamp(osw->padding_frames_min, osw->padding_frames, osw->buffer_frame_count);
 
     outstream->software_latency = osw->buffer_frame_count / (double)outstream->sample_rate;
+    outstream->software_latency_min = osw->padding_frames_min / (double)outstream->sample_rate;
 
     if (osw->is_raw) {
         if (FAILED(hr = IAudioClient_SetEventHandle(osw->audio_client, osw->h_event))) {
@@ -1865,6 +1866,7 @@ static int outstream_set_active_update_wasapi(struct SoundIoPrivate *si, struct 
     struct SoundIoOutStream *outstream = &os->pub;
     struct SoundIoOutStreamWasapi *osw = &os->backend_data.wasapi;
     osw->padding_frames = soundio_int_clamp(osw->padding_frames_min, (padding * outstream->sample_rate) + 0.5, osw->buffer_frame_count);
+    outstream->software_latency_min = osw->padding_frames / (double)outstream->sample_rate;
     SOUNDIO_ATOMIC_STORE(osw->active_update, active_update);
     return 0;
 }
