@@ -1,25 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\soundio.c">
+    <ClCompile Include="..\src\channel_layout.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\util.c">
+    <ClCompile Include="..\src\dummy.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\os.c">
+    <ClCompile Include="..\src\os.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\dummy.c">
+    <ClCompile Include="..\src\ring_buffer.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\channel_layout.c">
+    <ClCompile Include="..\src\soundio.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\ring_buffer.c">
+    <ClCompile Include="..\src\util.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\wasapi.c">
+    <ClCompile Include="..\src\wasapi.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

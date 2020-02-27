@@ -412,13 +412,13 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\soundio.c" />
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\util.c" />
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\os.c" />
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\dummy.c" />
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\channel_layout.c" />
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\ring_buffer.c" />
-    <ClCompile Include="E:\Projects\MalodyRestart\LibCpp\external\libsoundio-wasapi\src\wasapi.c" />
+    <ClCompile Include="..\src\channel_layout.c" />
+    <ClCompile Include="..\src\dummy.c" />
+    <ClCompile Include="..\src\os.c" />
+    <ClCompile Include="..\src\ring_buffer.c" />
+    <ClCompile Include="..\src\soundio.c" />
+    <ClCompile Include="..\src\util.c" />
+    <ClCompile Include="..\src\wasapi.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\soundio\endian.h" />
