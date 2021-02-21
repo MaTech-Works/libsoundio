@@ -38,9 +38,6 @@
     <ClInclude Include="..\soundio\soundio.h">
       <Filter>Source Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\alsa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\atomics.h">
       <Filter>Source Files</Filter>
     </ClInclude>

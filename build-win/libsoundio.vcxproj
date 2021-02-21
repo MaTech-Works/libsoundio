@@ -423,7 +423,6 @@
   <ItemGroup>
     <ClInclude Include="..\soundio\endian.h" />
     <ClInclude Include="..\soundio\soundio.h" />
-    <ClInclude Include="..\src\alsa.h" />
     <ClInclude Include="..\src\atomics.h" />
     <ClInclude Include="..\src\coreaudio.h" />
     <ClInclude Include="..\src\dummy.h" />
