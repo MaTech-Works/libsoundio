@@ -2393,7 +2393,7 @@ static STDMETHODIMP soundio_MMNotificationClient_OnDefaultDeviceChange(IMMNotifi
 static STDMETHODIMP soundio_MMNotificationClient_OnPropertyValueChanged(IMMNotificationClient *client,
         LPCWSTR wid, const PROPERTYKEY key)
 {
-    return queue_device_scan(client);
+    return S_OK;// queue_device_scan(client);
 }
 
 
