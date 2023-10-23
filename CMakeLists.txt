@@ -12,8 +12,8 @@ else()
     include(GNUInstallDirs)
 endif()
 
-if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE "Debug" CACHE STRING
+if(NOT CMAKE_SOUNDIO_BUILD_TYPE)
+    set(CMAKE_SOUNDIO_BUILD_TYPE "Debug" CACHE STRING
       "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 
@@ -27,15 +27,15 @@ if(NOT SOUNDIO_STATIC_LIBNAME)
     set(SOUNDIO_STATIC_LIBNAME soundio)
 endif()
 
-option(BUILD_STATIC_LIBS "Build static libraries" ON)
-option(BUILD_DYNAMIC_LIBS "Build dynamic libraries" ON)
-option(BUILD_EXAMPLE_PROGRAMS "Build example programs" ON)
-option(BUILD_TESTS "Build tests" ON)
-option(ENABLE_JACK "Enable JACK backend" ON)
-option(ENABLE_PULSEAUDIO "Enable PulseAudio backend" ON)
-option(ENABLE_ALSA "Enable ALSA backend" ON)
-option(ENABLE_COREAUDIO "Enable CoreAudio backend" ON)
-option(ENABLE_WASAPI "Enable WASAPI backend" ON)
+option(SOUNDIO_BUILD_STATIC_LIBS "Build static libraries" ON)
+option(SOUNDIO_BUILD_DYNAMIC_LIBS "Build dynamic libraries" ON)
+option(SOUNDIO_BUILD_EXAMPLE_PROGRAMS "Build example programs" ON)
+option(SOUNDIO_BUILD_TESTS "Build tests" ON)
+option(SOUNDIO_ENABLE_JACK "Enable JACK backend" ON)
+option(SOUNDIO_ENABLE_PULSEAUDIO "Enable PulseAudio backend" ON)
+option(SOUNDIO_ENABLE_ALSA "Enable ALSA backend" ON)
+option(SOUNDIO_ENABLE_COREAUDIO "Enable CoreAudio backend" ON)
+option(SOUNDIO_ENABLE_WASAPI "Enable WASAPI backend" ON)
 
 find_package(Threads)
 if(Threads_FOUND)
@@ -44,7 +44,7 @@ else(Threads_FOUND)
     set(STATUS_THREADS "not found")
 endif(Threads_FOUND)
 
-if(ENABLE_JACK)
+if(SOUNDIO_ENABLE_JACK)
     find_package(JACK)
     if(JACK_FOUND)
         set(STATUS_JACK "OK")
@@ -61,7 +61,7 @@ else()
     set(JACK_LIBRARY "")
 endif()
 
-if(ENABLE_PULSEAUDIO)
+if(SOUNDIO_ENABLE_PULSEAUDIO)
     find_package(PulseAudio)
     if(PULSEAUDIO_FOUND)
         set(STATUS_PULSEAUDIO "OK")
@@ -78,7 +78,7 @@ else()
     set(PULSEAUDIO_LIBRARY "")
 endif()
 
-if(ENABLE_ALSA)
+if(SOUNDIO_ENABLE_ALSA)
     find_package(ALSA)
     if(ALSA_FOUND)
         set(STATUS_ALSA "OK")
@@ -95,7 +95,7 @@ else()
     set(ALSA_LIBRARIES "")
 endif()
 
-if(ENABLE_COREAUDIO)
+if(SOUNDIO_ENABLE_COREAUDIO)
     find_package(CoreAudio)
     if(COREAUDIO_FOUND)
         set(STATUS_COREAUDIO "OK")
@@ -124,7 +124,7 @@ else()
     set(AUDIOUNIT_LIBRARY "")
 endif()
 
-if(ENABLE_WASAPI)
+if(SOUNDIO_ENABLE_WASAPI)
     find_package(WASAPI)
     if(WASAPI_FOUND)
         set(STATUS_WASAPI "OK")
@@ -199,7 +199,7 @@ set(LIBSOUNDIO_LIBS
 
 if(MSVC)
     set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /Wall")
-    set(LIB_CFLAGS "/TP /W4")
+    set(LIB_CFLAGS "/TP /W1")
     set(EXAMPLE_CFLAGS "/W4")
     set(TEST_CFLAGS "${LIB_CFLAGS}")
     set(TEST_LDFLAGS " ")
@@ -223,7 +223,7 @@ configure_file(
     ${DOXYGEN_CONF_FILE}
 )
 
-if(BUILD_DYNAMIC_LIBS)
+if(SOUNDIO_BUILD_DYNAMIC_LIBS)
     add_library(libsoundio_shared SHARED ${LIBSOUNDIO_SOURCES})
     set_target_properties(libsoundio_shared PROPERTIES
         OUTPUT_NAME soundio
@@ -236,7 +236,7 @@ if(BUILD_DYNAMIC_LIBS)
     install(TARGETS libsoundio_shared DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
-if(BUILD_STATIC_LIBS)
+if(SOUNDIO_BUILD_STATIC_LIBS)
     add_library(libsoundio_static STATIC ${LIBSOUNDIO_SOURCES})
     set_target_properties(libsoundio_static PROPERTIES
         OUTPUT_NAME ${SOUNDIO_STATIC_LIBNAME}
@@ -252,12 +252,12 @@ install(FILES
 
 # Example Programs
 
-if(BUILD_EXAMPLE_PROGRAMS)
+if(SOUNDIO_BUILD_EXAMPLE_PROGRAMS)
     add_executable(sio_sine example/sio_sine.c)
     set_target_properties(sio_sine PROPERTIES
         LINKER_LANGUAGE C
         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
-    if(BUILD_DYNAMIC_LIBS)
+    if(SOUNDIO_BUILD_DYNAMIC_LIBS)
         target_link_libraries(sio_sine libsoundio_shared ${LIBM})
     else()
         target_link_libraries(sio_sine libsoundio_static ${LIBSOUNDIO_LIBS} ${LIBM})
@@ -268,7 +268,7 @@ if(BUILD_EXAMPLE_PROGRAMS)
     set_target_properties(sio_list_devices PROPERTIES
         LINKER_LANGUAGE C
         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
-    if(BUILD_DYNAMIC_LIBS)
+    if(SOUNDIO_BUILD_DYNAMIC_LIBS)
         target_link_libraries(sio_list_devices libsoundio_shared)
     else()
         target_link_libraries(sio_list_devices libsoundio_static ${LIBSOUNDIO_LIBS})
@@ -279,7 +279,7 @@ if(BUILD_EXAMPLE_PROGRAMS)
     set_target_properties(sio_microphone PROPERTIES
         LINKER_LANGUAGE C
         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
-    if(BUILD_DYNAMIC_LIBS)
+    if(SOUNDIO_BUILD_DYNAMIC_LIBS)
         target_link_libraries(sio_microphone libsoundio_shared)
     else()
         target_link_libraries(sio_microphone libsoundio_static ${LIBSOUNDIO_LIBS})
@@ -290,7 +290,7 @@ if(BUILD_EXAMPLE_PROGRAMS)
     set_target_properties(sio_record PROPERTIES
         LINKER_LANGUAGE C
         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
-    if(BUILD_DYNAMIC_LIBS)
+    if(SOUNDIO_BUILD_DYNAMIC_LIBS)
         target_link_libraries(sio_record libsoundio_shared)
     else()
         target_link_libraries(sio_record libsoundio_static ${LIBSOUNDIO_LIBS})
@@ -298,7 +298,7 @@ if(BUILD_EXAMPLE_PROGRAMS)
     install(TARGETS sio_record DESTINATION ${CMAKE_INSTALL_BINDIR})
 endif()
 
-if(BUILD_TESTS)
+if(SOUNDIO_BUILD_TESTS)
     add_executable(unit_tests "${libsoundio_SOURCE_DIR}/test/unit_tests.c" ${LIBSOUNDIO_SOURCES})
     target_link_libraries(unit_tests LINK_PUBLIC ${LIBSOUNDIO_LIBS})
     set_target_properties(unit_tests PROPERTIES
@@ -318,7 +318,7 @@ if(BUILD_TESTS)
     set_target_properties(underflow PROPERTIES
         LINKER_LANGUAGE C
         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
-    if(BUILD_DYNAMIC_LIBS)
+    if(SOUNDIO_BUILD_DYNAMIC_LIBS)
         target_link_libraries(underflow libsoundio_shared ${LIBM})
     else()
         target_link_libraries(underflow libsoundio_static ${LIBSOUNDIO_LIBS} ${LIBM})
@@ -328,7 +328,7 @@ if(BUILD_TESTS)
     set_target_properties(backend_disconnect_recover PROPERTIES
         LINKER_LANGUAGE C
         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
-    if(BUILD_DYNAMIC_LIBS)
+    if(SOUNDIO_BUILD_DYNAMIC_LIBS)
         target_link_libraries(backend_disconnect_recover libsoundio_shared)
     else()
         target_link_libraries(backend_disconnect_recover libsoundio_static ${LIBSOUNDIO_LIBS})
@@ -338,7 +338,7 @@ if(BUILD_TESTS)
     set_target_properties(overflow PROPERTIES
         LINKER_LANGUAGE C
         COMPILE_FLAGS ${EXAMPLE_CFLAGS})
-    if(BUILD_DYNAMIC_LIBS)
+    if(SOUNDIO_BUILD_DYNAMIC_LIBS)
         target_link_libraries(overflow libsoundio_shared)
     else()
         target_link_libraries(overflow libsoundio_static ${LIBSOUNDIO_LIBS})
@@ -370,10 +370,10 @@ message("\n"
     "Installation Summary\n"
     "--------------------\n"
     "* Install Directory            : ${CMAKE_INSTALL_PREFIX}\n"
-    "* Build Type                   : ${CMAKE_BUILD_TYPE}\n"
-    "* Build static libs            : ${BUILD_STATIC_LIBS}\n"
-    "* Build examples               : ${BUILD_EXAMPLE_PROGRAMS}\n"
-    "* Build tests                  : ${BUILD_TESTS}\n"
+    "* Build Type                   : ${CMAKE_SOUNDIO_BUILD_TYPE}\n"
+    "* Build static libs            : ${SOUNDIO_BUILD_STATIC_LIBS}\n"
+    "* Build examples               : ${SOUNDIO_BUILD_EXAMPLE_PROGRAMS}\n"
+    "* Build tests                  : ${SOUNDIO_BUILD_TESTS}\n"
 )
 
 message(
