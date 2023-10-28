@@ -572,6 +572,10 @@ int soundio_outstream_set_active_update(struct SoundIoOutStream *outstream, bool
     struct SoundIo *soundio = outstream->device->soundio;
     struct SoundIoPrivate *si = (struct SoundIoPrivate *)soundio;
     struct SoundIoOutStreamPrivate *os = (struct SoundIoOutStreamPrivate *)outstream;
+
+    if (!si->outstream_set_active_update)
+        return SoundIoErrorIncompatibleBackend;
+
     return si->outstream_set_active_update(si, os, active_update, padding);
 }
 
