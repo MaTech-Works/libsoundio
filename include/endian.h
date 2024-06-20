@@ -24,6 +24,8 @@
 #define SOUNDIO_OS_BIG_ENDIAN
 #elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
 #define SOUNDIO_OS_BIG_ENDIAN
+#elif defined(BYTE_ORDER) && BYTE_ORDER == BIG_ENDIAN
+#define SOUNDIO_OS_BIG_ENDIAN
 #elif defined(_BIG_ENDIAN)
 #define SOUNDIO_OS_BIG_ENDIAN
 #elif defined(__sparc)
@@ -60,6 +62,8 @@
 #define SOUNDIO_OS_LITTLE_ENDIAN
 #elif defined(__BYTE_ORDER__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
 #define SOUNDIO_OS_LITTLE_ENDIAN
+#elif defined(BYTE_ORDER) && BYTE_ORDER == LITTLE_ENDIAN
+#define SOUNDIO_OS_LITTLE_ENDIAN
 #elif defined(_LITTLE_ENDIAN)
 #define SOUNDIO_OS_LITTLE_ENDIAN
 #elif defined(__i386__)
@@ -89,6 +93,10 @@
 #elif defined(_M_X64)
 #define SOUNDIO_OS_LITTLE_ENDIAN
 #elif defined(__bfin__)
+#define SOUNDIO_OS_LITTLE_ENDIAN
+#elif defined(_M_ARM)
+#define SOUNDIO_OS_LITTLE_ENDIAN
+#elif defined(_M_ARM64)
 #define SOUNDIO_OS_LITTLE_ENDIAN
 #else
 #error unable to detect endianness
