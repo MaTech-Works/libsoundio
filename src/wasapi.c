@@ -1386,16 +1386,15 @@ static int outstream_do_open(struct SoundIoPrivate *si, struct SoundIoOutStreamP
             flags, periodicity_in_frames, (WAVEFORMATEX*)&wave_format, NULL)))
         {
             IUnknown_Release(audio_client3);
-            return SoundIoErrorOpeningDevice;
+            audio_client3 = NULL;
         }
+    }
 
+    if (audio_client3 != NULL) {
         osw->padding_frames_min = periodicity_in_frames;
-
         IUnknown_Release(audio_client3);
         audio_client3 = NULL;
-    }
-    else
-    {
+    } else {
         if (FAILED(hr = IAudioClient_Initialize(osw->audio_client, share_mode, flags,
                 buffer_duration, periodicity, (WAVEFORMATEX*)&wave_format, NULL)))
         {
