@@ -35,6 +35,21 @@
 #define SOUNDIO_ATTR_WARN_UNUSED_RESULT __attribute__((warn_unused_result))
 #endif
 
+static inline unsigned int soundio_uint_delta(unsigned int from, unsigned int to) {
+    return (int)(to - from);
+}
+
+static inline unsigned int soundio_uint_min(unsigned int a, unsigned int b) {
+    return (a <= b) ? a : b;
+}
+
+static inline unsigned int soundio_uint_max(unsigned int a, unsigned int b) {
+    return (a >= b) ? a : b;
+}
+
+static inline unsigned int soundio_uint_clamp(unsigned int min_value, unsigned int value, unsigned int max_value) {
+    return soundio_uint_max(soundio_uint_min(value, max_value), min_value);
+}
 
 static inline int soundio_int_min(int a, int b) {
     return (a <= b) ? a : b;
